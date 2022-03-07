@@ -13,14 +13,18 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
 
-
 export default function RecipeReviewCard({
   username,
   date,
   description,
   image,
+  like,
+  id,
+  setData,
+  setDatas
 }) {
   const [avatarUrl, setAvatarUrl] = useState(null);
+  const user = JSON.parse(localStorage.getItem("supabase.auth.token"));
 
   const downloadImage = async (path) => {
     try {
@@ -37,6 +41,46 @@ export default function RecipeReviewCard({
     }
   };
 
+  const handleClick = async () => {
+    try {
+      let aux = like + 1;
+      let ids = id;
+
+      await supabase
+        .from("records")
+        .update({"like": aux})
+        .match({"id": ids});
+
+        getPostsByUser();
+
+        getPostsByAllUsers();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getPostsByUser = async () => {
+    try {
+      let { data } = await supabase
+        .from("records")
+        .select()
+        .eq("user_id", user?.currentSession?.user?.id);
+
+      setData(data);
+      console.log(data)
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getPostsByAllUsers = async () => {
+    try {
+      let { data } = await supabase.from("records").select("*");
+      setDatas(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
     const fetch = async () => {
       await downloadImage(image);
@@ -62,9 +106,9 @@ export default function RecipeReviewCard({
         </Typography>
       </CardContent>
       <CardActions>
-        <IconButton aria-label="add to favorites">
-          <FavoriteBorderOutlinedIcon />
-          <FavoriteIcon />
+        <IconButton aria-label="add to favorites" onClick={handleClick}>
+          {like > 0 && <FavoriteIcon />}
+          {like === 0 && <FavoriteBorderOutlinedIcon />}
         </IconButton>
       </CardActions>
     </Card>
