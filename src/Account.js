@@ -182,6 +182,9 @@ export default function Account() {
                   description={current.description}
                   image={current.avatar_url}
                   like={current.like}
+                  id={current.id}
+                  setDatas={setDatas}
+                  setData={setData}
                 ></RecipeReviewCard>
               </Box>
             ))
