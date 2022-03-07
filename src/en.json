@@ -1,0 +1,9 @@
+    {
+    "login_title": "Instagram Clone",
+    "login_subtitle": "Sign in via magic link with your email below",
+    "button_magiclink": "Send magic link",
+    "loading_span": "Loading",
+    "email_placeholder": "Your email",
+    "button_modal": "Create",
+    "close_modal": "Close modal"
+}
